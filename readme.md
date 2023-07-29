@@ -42,8 +42,8 @@ Make sure you have the following software installed:
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/<YOUR_USERNAME>/<YOUR_REPOSITORY>.git
-cd <YOUR_REPOSITORY>
+git clone https://github.com/atxpaul/API-Rest-Python-PoC.git
+cd API-Rest-Python-PoC
 ```
 
 2. Set up a virtual environment (optional but recommended):

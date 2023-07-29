@@ -1,0 +1,61 @@
+name: Python-Flask CI/CD full pipeline
+
+on:
+    push:
+        branches: [main]
+    pull_request:
+        branches: [main]
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                python-version: ['3.9']
+
+        steps:
+            - uses: actions/checkout@v3
+            - name: Set up Python ${{ matrix.python-version }}
+              uses: actions/setup-python@v4
+              with:
+                  python-version: ${{ matrix.python-version }}
+            - name: Install dependencies
+              run: |
+                  python -m pip install --upgrade pip
+                  pip install ruff pytest
+                  if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+            - name: Lint with ruff
+              run: |
+                  # stop the build if there are Python syntax errors or undefined names
+                  ruff --format=github --select=E9,F63,F7,F82 --target-version=py37 .
+                  # default set of ruff rules with GitHub Annotations
+                  ruff --format=github --target-version=py37 .
+            - name: Test with pytest
+              run: |
+                  pytest
+
+    docker:
+        needs: build
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v2
+            - name: Set up QEMU
+              uses: docker/setup-qemu-action@v1
+            - name: Set up Docker Buildx
+              uses: docker/setup-buildx-action@v1
+            - name: Login to DockerHub
+              uses: docker/login-action@v1
+              with:
+                  username: ${{ secrets.DOCKERHUB_USERNAME }}
+                  password: ${{ secrets.DOCKERHUB_TOKEN }}
+            - name: Get commit ID
+              run: |
+                  git_hash=$(git rev-parse --short "$GITHUB_SHA")
+                  echo "Commit ID: $git_hash"
+            - name: Build and push
+              uses: docker/build-push-action@v2
+              with:
+                  context: .
+                  push: true
+                  tags: atxpaul/test-tdd:$git_hash

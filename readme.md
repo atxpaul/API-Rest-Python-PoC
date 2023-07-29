@@ -1,6 +1,6 @@
 # Python API Proof of Concept
 
-[![Build Status](https://github.com/atxpaul/API-Rest-Python-PoC/actions/workflows/ci.yml/badge.svg)](https://github.com/atxpaul/API-Rest-Python-PoC/actions/workflows/ci.yml)
+[![Build Status](https://github.com/atxpaul/API-Rest-Python-PoC/actions/workflows/build.yml/badge.svg)](https://github.com/atxpaul/API-Rest-Python-PoC/actions/workflows/build.yml)
 
 This repository contains a simple Proof of Concept (PoC) for a Python API that returns the current time.
 
